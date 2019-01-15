@@ -1,5 +1,6 @@
 package com.omar.ecommerceapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,13 +8,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.omar.ecommerceapplication.network.ProductEntry;
 
-public class CategoriesActivity extends AppCompatActivity {
+import java.util.List;
+
+public class CategoriesActivity extends AppCompatActivity implements ProductCardRecyclerViewAdapter.IProductClickListener {
+
+    List<ProductEntry> products;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,8 @@ public class CategoriesActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        products = ProductEntry.initProductEntryList(getResources());
+
         // Set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -29,7 +37,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(gridLayoutManager);
         ProductCardRecyclerViewAdapter adapter = new ProductCardRecyclerViewAdapter(
-                ProductEntry.initProductEntryList(getResources()));
+                products, this);
         recyclerView.setAdapter(adapter);
         int largePadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing);
         int smallPadding = getResources().getDimensionPixelSize(R.dimen.shr_product_grid_spacing_small);
@@ -66,5 +74,17 @@ public class CategoriesActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onProductClickListener(RecyclerView.ViewHolder viewHolder, int itemPosition) {
+        ProductEntry product = products.get(itemPosition);
+
+        Bundle b = new Bundle();
+        b.putSerializable("product", product);
+
+        Intent i = new Intent(CategoriesActivity.this, ProductDetailsActivity.class);
+        i.putExtras(b);
+        startActivity(i);
     }
 }
