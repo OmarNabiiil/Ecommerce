@@ -1,0 +1,6 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="shr_product_grid_spacing">26dp</dimen>
+    <dimen name="shr_product_grid_spacing_small">14dp</dimen>
+    <dimen name="shr_product_card_image_height">108dp</dimen>
+</resources>
